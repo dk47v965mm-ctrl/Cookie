@@ -1,1 +1,555 @@
-# Cookie
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>앤톤의 쿠키 가게</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#f7a8c4; --pink-d:#e9789f; --pink-l:#ffe3ee; --cream:#fff8ec;
+  --brown:#7a4a2a; --sky:#bfe3ff; --yellow:#ffe8a3; --mint:#c9f0dc;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  font-family:'Jua',system-ui,sans-serif;color:var(--brown);
+  background:
+    radial-gradient(circle at 10px 10px,#f9d3e2 2.5px,transparent 3px) 0 0/28px 28px,
+    radial-gradient(circle at 24px 24px,#fde9b8 2.5px,transparent 3px) 0 0/28px 28px,
+    var(--cream);
+  display:flex;justify-content:center;
+}
+.app{width:100%;max-width:430px;min-height:100%;position:relative;padding:0 14px 28px}
+.awning{
+  height:46px;margin:0 -14px 10px;
+  background:
+    radial-gradient(circle at 50% 0,transparent 0,transparent 0) ,
+    repeating-linear-gradient(90deg,var(--pink) 0 36px,#fff 36px 72px);
+  position:relative;
+}
+.awning::after{
+  content:"";position:absolute;left:0;right:0;bottom:-14px;height:16px;
+  background:
+    radial-gradient(circle at 18px 0,var(--pink) 17px,transparent 18px) 0 0/72px 16px repeat-x,
+    radial-gradient(circle at 54px 0,#fff 17px,transparent 18px) 0 0/72px 16px repeat-x;
+}
+h1{
+  text-align:center;margin:22px 0 4px;font-size:34px;font-weight:400;color:var(--pink-d);
+  text-shadow:3px 3px 0 #fff,-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,0 5px 0 #f6c7d8;
+  letter-spacing:1px;
+}
+.sub{text-align:center;font-size:15px;color:#b58a6a;margin:0 0 10px}
+.screen{display:none;animation:pop .35s ease}
+.screen.on{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{
+  background:#fff;border:3px solid var(--pink-l);border-radius:24px;padding:16px;
+  box-shadow:0 6px 0 #f6d4e1;margin-top:12px;
+}
+.step{display:inline-block;background:var(--pink-l);color:var(--pink-d);border-radius:99px;padding:3px 12px;font-size:14px}
+h2{font-weight:400;font-size:23px;margin:8px 0 10px}
+
+/* talk bubble */
+.talk{display:flex;align-items:flex-end;gap:10px;margin:6px 0 4px}
+.ava{
+  width:62px;height:62px;border-radius:50%;flex:none;overflow:hidden;
+  border:3px solid #fff;box-shadow:0 0 0 3px var(--pink);background:var(--pink-l);
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+}
+.ava img{width:100%;height:100%;object-fit:cover}
+.bubble{
+  position:relative;background:#fff;border:3px solid var(--pink);border-radius:18px;
+  padding:10px 14px;font-size:17px;line-height:1.35;flex:1;
+}
+.bubble::before{
+  content:"";position:absolute;left:-12px;bottom:14px;border:8px solid transparent;border-right-color:var(--pink);
+}
+.bubble .who{display:block;font-size:13px;color:var(--pink-d)}
+
+/* start */
+.frame{
+  width:230px;height:270px;margin:8px auto 0;background:#fff;padding:12px 12px 40px;border-radius:8px;
+  box-shadow:0 8px 18px rgba(233,120,159,.25);transform:rotate(-2deg);position:relative;
+}
+.frame .ph{
+  width:100%;height:100%;border-radius:4px;overflow:hidden;
+  background:repeating-linear-gradient(45deg,var(--pink-l) 0 12px,#fff 12px 24px);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--pink-d);font-size:16px;text-align:center;
+}
+.frame .ph img{width:100%;height:100%;object-fit:cover}
+.frame .cap{position:absolute;left:0;right:0;bottom:9px;text-align:center;font-size:18px}
+.frame .tape{position:absolute;top:-12px;left:50%;width:80px;height:24px;margin-left:-40px;background:rgba(247,168,196,.6);transform:rotate(3deg)}
+.big-bubble{
+  margin:22px auto 6px;max-width:300px;text-align:center;background:#fff;border:3px solid var(--pink);
+  border-radius:22px;padding:12px 16px;font-size:20px;position:relative;
+}
+.big-bubble::before{content:"";position:absolute;top:-19px;left:50%;margin-left:-10px;border:10px solid transparent;border-bottom-color:var(--pink)}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+button,.btn{
+  font-family:inherit;font-size:18px;border:none;border-radius:99px;padding:12px 22px;cursor:pointer;
+  background:var(--pink-d);color:#fff;box-shadow:0 4px 0 #c95a82;transition:transform .08s;
+}
+button:active,.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #c95a82}
+button.soft,.btn.soft{background:#fff;color:var(--pink-d);border:3px solid var(--pink);box-shadow:0 4px 0 #f3c3d5}
+button:disabled{opacity:.4;pointer-events:none}
+input[type=file]{display:none}
+.note{font-size:13px;color:#c09a80;text-align:center;margin-top:10px;line-height:1.4}
+
+/* ingredients */
+.ings{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0 10px}
+.ing{
+  background:var(--cream);border:3px solid #f5e1c8;border-radius:16px;padding:8px 0 6px;text-align:center;cursor:pointer;
+  font-size:13px;transition:.15s;
+}
+.ing .e{font-size:30px;display:block}
+.ing.in{background:var(--mint);border-color:#8fd6b0;transform:scale(.94)}
+.ing.opt::after{content:"선택";display:block;font-size:10px;color:#b58a6a}
+.bowlwrap{position:relative;width:220px;height:170px;margin:6px auto 0;cursor:pointer;user-select:none}
+.bowlwrap svg{width:100%;height:100%}
+.spoon{transform-origin:110px 60px;transition:transform .2s}
+.meter{height:16px;background:var(--pink-l);border-radius:99px;overflow:hidden;margin:8px 0}
+.meter>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--pink-d));border-radius:99px;transition:width .2s}
+.floaty{position:absolute;font-size:28px;pointer-events:none;animation:drop .6s ease-in forwards}
+@keyframes drop{from{transform:translateY(-60px);opacity:1}to{transform:translateY(40px);opacity:0}}
+
+/* shapes */
+.shapes{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.shp{background:var(--cream);border:3px solid #f5e1c8;border-radius:16px;padding:6px;cursor:pointer;text-align:center;font-size:13px}
+.shp svg{width:100%;height:auto;display:block}
+.shp.sel{border-color:var(--pink-d);background:var(--pink-l)}
+.preview{width:200px;margin:10px auto 0}
+.preview svg{width:100%;display:block}
+
+/* oven */
+.oven{
+  width:250px;margin:6px auto 0;background:var(--sky);border-radius:26px;padding:14px;
+  box-shadow:inset 0 -8px 0 #9fcff3,0 6px 0 #f6d4e1;position:relative;
+}
+.knobs{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
+.knobs i{width:18px;height:18px;border-radius:50%;background:var(--pink-d);display:block;box-shadow:inset 0 -3px 0 #c95a82}
+.window{
+  background:#3a2a2a;border-radius:16px;height:150px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;border:6px solid #e8f5ff;
+}
+.window .glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 100%,rgba(255,170,60,.65),transparent 70%);opacity:0;transition:opacity .4s}
+.window.hot .glow{opacity:1}
+.window svg{width:110px;position:relative}
+.gauge{position:relative;height:26px;border-radius:99px;margin:14px 0 6px;overflow:hidden;
+  background:linear-gradient(90deg,#fff1cf 0 50%,#ffd27a 50% 78%,#b97a3c 78%);border:3px solid #fff;box-shadow:0 0 0 2px #f3c3d5}
+.gauge .zone{position:absolute;top:0;bottom:0;left:50%;width:28%;border-left:3px dashed #fff;border-right:3px dashed #fff}
+.gauge .needle{position:absolute;top:-2px;bottom:-2px;width:6px;margin-left:-3px;background:var(--pink-d);border-radius:3px;left:0}
+.glabels{display:flex;justify-content:space-between;font-size:12px;color:#b58a6a}
+
+/* decorate */
+.decor{position:relative;width:240px;margin:4px auto;touch-action:manipulation}
+.decor svg{width:100%;display:block;cursor:crosshair}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.chip{
+  font-family:inherit;font-size:15px;padding:7px 12px;border-radius:99px;border:3px solid #f5e1c8;background:var(--cream);
+  color:var(--brown);cursor:pointer;box-shadow:none;
+}
+.chip.sel{border-color:var(--pink-d);background:var(--pink-l);color:var(--pink-d)}
+.chip .dot{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:2px solid #fff;box-shadow:0 0 0 1px #ddd}
+.lbl{font-size:14px;color:#b58a6a;text-align:center;margin-top:6px}
+
+/* finish */
+.result{text-align:center}
+.stars{font-size:30px;color:#ffc93c;letter-spacing:4px;text-shadow:0 2px 0 #e9a400}
+.duo{display:flex;align-items:center;justify-content:center;gap:12px;margin:8px 0}
+.duo .ava{width:96px;height:96px;font-size:44px}
+.duo .ck{width:130px}
+.duo .ck svg{width:100%;display:block}
+.namein{font-family:inherit;font-size:18px;text-align:center;border:3px solid var(--pink);border-radius:14px;padding:8px;width:210px;color:var(--brown);outline:none}
+
+/* shop */
+.shelf{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px;border-radius:20px;
+  background:linear-gradient(#eaf6ff,#d6efff);border:4px solid #fff;box-shadow:0 0 0 3px var(--sky);
+}
+.item{text-align:center;font-size:13px}
+.item .ck svg{width:100%;display:block}
+.item .tag{background:#fff;border-radius:10px;padding:2px 4px;margin-top:2px;border:2px solid var(--pink-l);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shelfbar{height:10px;background:#f3c3d5;border-radius:6px;grid-column:1/-1;margin:-4px 0 0}
+.empty{grid-column:1/-1;text-align:center;color:#8bb7d6;padding:20px 0}
+.foot{text-align:center;font-size:12px;color:#d2b39b;margin-top:18px}
+.sparkle{position:fixed;pointer-events:none;font-size:22px;animation:spark 1s ease-out forwards;z-index:9}
+@keyframes spark{from{opacity:1;transform:translateY(0) scale(.6)}to{opacity:0;transform:translateY(-70px) scale(1.3)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="awning"></div>
+  <h1>앤톤의 쿠키 가게</h1>
+  <p class="sub">🍪 두근두근 베이킹 타임 🍪</p>
+
+  <!-- 0 start -->
+  <section class="screen on" id="s0">
+    <div class="frame">
+      <div class="tape"></div>
+      <div class="ph" id="ph"><div style="font-size:40px">📷</div>사진을 넣어주세요</div>
+      <div class="cap">♡ 앤톤 사장님 ♡</div>
+    </div>
+    <div class="big-bubble">쿠키 만드는 거 도와줄 거지? 🍪</div>
+    <div class="btns">
+      <label class="btn soft" for="file">📷 사진 넣기</label>
+      <button id="go">응! 도와줄게 ♡</button>
+    </div>
+    <input type="file" id="file" accept="image/*">
+    <p class="note">사진은 내 폰 화면에서만 보이고 어디에도 저장되지 않아요</p>
+  </section>
+
+  <!-- 1 ingredients -->
+  <section class="screen" id="s1">
+    <div class="card">
+      <span class="step">STEP 1</span>
+      <h2>반죽 만들기</h2>
+      <div class="talk"><div class="ava"></div><div class="bubble"><span class="who">앤톤</span><span class="say"></span></div></div>
+      <div class="ings" id="ings"></div>
+      <div class="bowlwrap" id="bowl">
+        <svg viewBox="0 0 220 170">
+          <g class="spoon" id="spoon"><rect x="104" y="0" width="12" height="90" rx="6" fill="#f2c48d" stroke="#c98d52" stroke-width="3"/></g>
+          <ellipse cx="110" cy="70" rx="96" ry="22" fill="#fff6c9" stroke="#e8c96a" stroke-width="4"/>
+          <ellipse id="dough" cx="110" cy="72" rx="0" ry="0" fill="#f6e3b8"/>
+          <path d="M14 70 Q20 160 110 162 Q200 160 206 70" fill="#ffe08a" stroke="#e8c96a" stroke-width="4"/>
+          <g fill="#f79fbf"><path d="M70 115 l8-8 a5 5 0 0 1 8 8 l-8 8z"/><path d="M110 120 l8-8 a5 5 0 0 1 8 8 l-8 8z" transform="translate(-8 0)"/><path d="M150 115 l8-8 a5 5 0 0 1 8 8 l-8 8z" transform="translate(-14 0)"/></g>
+        </svg>
+      </div>
+      <div class="meter"><i id="stirbar"></i></div>
+      <div class="btns"><button id="next1" disabled>다음 ▶</button></div>
+    </div>
+  </section>
+
+  <!-- 2 shape -->
+  <section class="screen" id="s2">
+    <div class="card">
+      <span class="step">STEP 2</span>
+      <h2>쿠키 틀 고르기</h2>
+      <div class="talk"><div class="ava"></div><div class="bubble"><span class="who">앤톤</span><span class="say"></span></div></div>
+      <div class="shapes" id="shapes"></div>
+      <div class="preview" id="prev2"></div>
+      <div class="btns"><button id="next2" disabled>오븐에 넣기 🔥</button></div>
+    </div>
+  </section>
+
+  <!-- 3 bake -->
+  <section class="screen" id="s3">
+    <div class="card">
+      <span class="step">STEP 3</span>
+      <h2>노릇노릇 굽기</h2>
+      <div class="talk"><div class="ava"></div><div class="bubble"><span class="who">앤톤</span><span class="say"></span></div></div>
+      <div class="oven">
+        <div class="knobs"><i></i><i></i><i></i></div>
+        <div class="window" id="win"><div class="glow"></div><div id="ovenck"></div></div>
+      </div>
+      <div class="gauge"><div class="zone"></div><div class="needle" id="needle"></div></div>
+      <div class="glabels"><span>덜 익음</span><span>✨딱 좋아✨</span><span>탐</span></div>
+      <div class="btns">
+        <button id="startbake">굽기 시작!</button>
+        <button id="takeout" style="display:none">지금 꺼내기!</button>
+        <button id="next3" style="display:none">꾸미러 가기 ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 decorate -->
+  <section class="screen" id="s4">
+    <div class="card">
+      <span class="step">STEP 4</span>
+      <h2>예쁘게 꾸미기</h2>
+      <div class="talk"><div class="ava"></div><div class="bubble"><span class="who">앤톤</span><span class="say"></span></div></div>
+      <div class="lbl">아이싱</div>
+      <div class="row" id="icings"></div>
+      <div class="decor" id="decor"></div>
+      <div class="lbl">토핑을 고르고 쿠키를 톡톡 눌러요</div>
+      <div class="row" id="tools"></div>
+      <div class="btns">
+        <button class="soft" id="undo">↩ 하나 빼기</button>
+        <button id="next4">완성! 🎀</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 finish -->
+  <section class="screen" id="s5">
+    <div class="card result">
+      <span class="step">완성</span>
+      <div class="stars" id="stars"></div>
+      <div class="duo"><div class="ava"></div><div class="ck" id="finalck"></div></div>
+      <div class="talk"><div class="ava" style="width:46px;height:46px;font-size:22px"></div><div class="bubble" style="text-align:left"><span class="who">앤톤</span><span class="say"></span></div></div>
+      <p style="margin:12px 0 6px">쿠키 이름을 지어줘!</p>
+      <input class="namein" id="cname" maxlength="10" value="앤톤 쿠키">
+      <div class="btns"><button id="toshop">가게에 진열하기 🏪</button></div>
+    </div>
+  </section>
+
+  <!-- 6 shop -->
+  <section class="screen" id="s6">
+    <div class="card">
+      <span class="step">앤톤의 쿠키 가게</span>
+      <h2>오늘의 진열대</h2>
+      <div class="talk"><div class="ava"></div><div class="bubble"><span class="who">앤톤</span><span class="say"></span></div></div>
+      <div class="shelf" id="shelf"></div>
+      <div class="btns"><button id="again">쿠키 또 굽기 🍪</button></div>
+    </div>
+  </section>
+
+  <p class="foot">팬이 만든 비공식 미니게임 ♡</p>
+</div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+let photo=null;
+const shop=[];
+let st;
+function reset(){st={ings:new Set(),stir:0,shape:null,color:null,level:null,icing:'none',spr:[],tool:'star'};}
+reset();
+
+/* ---------- avatar + talk ---------- */
+function paintAvatars(){
+  document.querySelectorAll('.ava').forEach(a=>{
+    a.innerHTML=photo?`<img src="${photo}" alt="">`:'🧑‍🍳';
+  });
+}
+function say(scr,txt){const el=document.querySelector('#'+scr+' .say');if(el)el.textContent=txt;}
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  $('#'+id).classList.add('on');paintAvatars();window.scrollTo({top:0,behavior:'smooth'});
+}
+function sparkle(x,y,ch){
+  const s=document.createElement('div');s.className='sparkle';s.textContent=ch||'✨';
+  s.style.left=(x-10)+'px';s.style.top=(y-10)+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),1000);
+}
+
+/* ---------- start ---------- */
+$('#file').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{photo=r.result;$('#ph').innerHTML=`<img src="${photo}" alt="">`;paintAvatars();};
+  r.readAsDataURL(f);
+});
+$('#go').onclick=()=>{show('s1');say('s1','재료부터 넣자! 초코칩은 넣고 싶으면 넣어 😋');};
+
+/* ---------- step1 ---------- */
+const INGS=[{k:'flour',e:'🌾',n:'밀가루'},{k:'butter',e:'🧈',n:'버터'},{k:'sugar',e:'🍬',n:'설탕'},{k:'egg',e:'🥚',n:'달걀'},{k:'choco',e:'🍫',n:'초코칩',opt:1}];
+const REQ=['flour','butter','sugar','egg'];
+function buildIngs(){
+  $('#ings').innerHTML=INGS.map(i=>`<div class="ing${i.opt?' opt':''}" data-k="${i.k}"><span class="e">${i.e}</span>${i.n}</div>`).join('');
+  $('#ings').querySelectorAll('.ing').forEach(el=>el.onclick=()=>{
+    const k=el.dataset.k;
+    if(st.ings.has(k))return;
+    st.ings.add(k);el.classList.add('in');
+    const b=$('#bowl'),f=document.createElement('div');f.className='floaty';
+    f.textContent=INGS.find(i=>i.k===k).e;f.style.left=(60+Math.random()*90)+'px';f.style.top='30px';
+    b.appendChild(f);setTimeout(()=>f.remove(),600);
+    const n=st.ings.size;$('#dough').setAttribute('rx',Math.min(80,n*17));$('#dough').setAttribute('ry',Math.min(16,n*3.4));
+    if(REQ.every(r=>st.ings.has(r))&&st.stir===0)say('s1','좋아! 이제 볼을 톡톡 눌러서 반죽을 섞어줘 🥄');
+    else if(!REQ.every(r=>st.ings.has(r)))say('s1',`${INGS.find(i=>i.k===k).n} 넣었다! 다음 재료도 👀`);
+  });
+}
+$('#bowl').onclick=e=>{
+  if(!REQ.every(r=>st.ings.has(r))){say('s1','앗 아직 재료가 부족해! 밀가루, 버터, 설탕, 달걀 다 넣어줘');return;}
+  if(st.stir>=10)return;
+  st.stir++;
+  $('#spoon').style.transform=`rotate(${st.stir%2?18:-18}deg)`;
+  $('#stirbar').style.width=(st.stir*10)+'%';
+  const d=$('#dough');d.setAttribute('fill',st.stir>=10?(st.ings.has('choco')?'#e9c48c':'#efcf96'):'#f3dcae');
+  sparkle(e.clientX,e.clientY,'💫');
+  if(st.stir===5)say('s1','오 잘 섞인다! 조금만 더~');
+  if(st.stir>=10){say('s1','반죽 완성! 진짜 잘한다 👍');$('#next1').disabled=false;}
+};
+$('#next1').onclick=()=>{show('s2');say('s2','어떤 모양으로 만들까? 골라줘!');};
+
+/* ---------- cookie drawing ---------- */
+function starPts(){
+  const p=[];for(let i=0;i<10;i++){const r=i%2?40:86,a=-Math.PI/2+i*Math.PI/5;p.push((100+r*Math.cos(a)).toFixed(1)+','+(104+r*Math.sin(a)).toFixed(1));}return p.join(' ');
+}
+const STAR=starPts();
+const HEART='M100 172 C 42 128, 14 94, 32 58 C 50 24, 92 28, 100 62 C 108 28, 150 24, 168 58 C 186 94, 158 128, 100 172 Z';
+function parts(shape,attrs){
+  switch(shape){
+    case 'circle':return `<circle cx="100" cy="100" r="80" ${attrs}/>`;
+    case 'heart':return `<path d="${HEART}" ${attrs}/>`;
+    case 'star':return `<polygon points="${STAR}" ${attrs} stroke-linejoin="round"/>`;
+    case 'bear':return `<circle cx="50" cy="52" r="27" ${attrs}/><circle cx="150" cy="52" r="27" ${attrs}/><circle cx="100" cy="112" r="72" ${attrs}/>`;
+    case 'bunny':return `<ellipse cx="72" cy="48" rx="20" ry="44" ${attrs}/><ellipse cx="128" cy="48" rx="20" ry="44" ${attrs}/><ellipse cx="100" cy="128" rx="74" ry="60" ${attrs}/>`;
+  }return '';
+}
+function darker(hex,amt){
+  const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;
+  r=Math.max(0,r-amt);g=Math.max(0,g-amt);b=Math.max(0,b-amt);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+const ICING={none:null,pink:'#ffc2d6',white:'#fffaf3',choco:'#8a5233',sky:'#bfe3ff',yellow:'#fff0a8'};
+const CHIPS=[[70,95],[128,88],[100,135],[62,140],[140,138],[100,100]];
+function cookieSVG(c){
+  const col=c.color||'#f3dcae';
+  const shp=c.shape||'circle';
+  let s=`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">`;
+  s+=`<g transform="translate(0 6)" opacity=".18">${parts(shp,'fill="#7a4a2a"')}</g>`;
+  s+=parts(shp,`fill="${darker(col,40)}" stroke="${darker(col,40)}" stroke-width="12"`);
+  s+=parts(shp,`fill="${col}"`);
+  if(c.icing&&ICING[c.icing]){
+    s+=`<g transform="translate(100 104) scale(.8) translate(-100 -104)">${parts(shp,`fill="${ICING[c.icing]}"`)}</g>`;
+  }
+  if(c.choco)CHIPS.forEach(([x,y])=>s+=`<ellipse cx="${x}" cy="${y}" rx="6" ry="5" fill="#4a2a18"/>`);
+  if(shp==='bear'||shp==='bunny'){
+    const y=shp==='bear'?108:126;
+    s+=`<circle cx="78" cy="${y}" r="6" fill="#3a2414"/><circle cx="122" cy="${y}" r="6" fill="#3a2414"/>`;
+    s+=`<path d="M92 ${y+14} q8 8 16 0" fill="none" stroke="#3a2414" stroke-width="4" stroke-linecap="round"/>`;
+    s+=`<ellipse cx="64" cy="${y+14}" rx="9" ry="6" fill="#ff9fbf" opacity=".7"/><ellipse cx="136" cy="${y+14}" rx="9" ry="6" fill="#ff9fbf" opacity=".7"/>`;
+  }
+  (c.spr||[]).forEach(p=>{
+    s+=`<text x="${p.x}" y="${p.y}" font-size="${p.sz}" fill="${p.c}" text-anchor="middle" dominant-baseline="central" transform="rotate(${p.r} ${p.x} ${p.y})" style="font-family:system-ui,sans-serif">${p.ch}</text>`;
+  });
+  return s+'</svg>';
+}
+
+/* ---------- step2 ---------- */
+const SHAPES=[{k:'heart',n:'하트'},{k:'star',n:'별'},{k:'bear',n:'곰돌이'},{k:'bunny',n:'토끼'},{k:'circle',n:'동글'}];
+const SHAPE_SAY={heart:'하트 좋다 ♡ 마음 담아서 굽자!',star:'별 모양! 반짝반짝하겠다 ⭐',bear:'곰돌이 너무 귀엽다 🐻',bunny:'토끼 쿠키 귀엽다 🐰',circle:'동글동글 기본이 최고지!'};
+function buildShapes(){
+  $('#shapes').innerHTML=SHAPES.map(s=>`<div class="shp" data-k="${s.k}">${cookieSVG({shape:s.k,color:'#f3dcae'})}${s.n}</div>`).join('');
+  $('#shapes').querySelectorAll('.shp').forEach(el=>el.onclick=()=>{
+    $('#shapes').querySelectorAll('.shp').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');
+    st.shape=el.dataset.k;$('#prev2').innerHTML=cookieSVG({shape:st.shape,color:'#f3dcae',choco:st.ings.has('choco')});
+    say('s2',SHAPE_SAY[st.shape]);$('#next2').disabled=false;
+  });
+}
+$('#next2').onclick=()=>{
+  show('s3');say('s3','오븐 준비 완료! 굽기 시작 누르고, 딱 좋을 때 꺼내줘 🔥');
+  $('#ovenck').innerHTML=cookieSVG({shape:st.shape,color:'#f3dcae',choco:st.ings.has('choco')});
+  $('#needle').style.left='0%';$('#startbake').style.display='';$('#takeout').style.display='none';$('#next3').style.display='none';
+  $('#win').classList.remove('hot');
+};
+
+/* ---------- step3 ---------- */
+const STOPS=[[0,[246,224,176]],[50,[236,192,120]],[64,[226,164,88]],[78,[190,122,60]],[100,[100,62,32]]];
+function bakeColor(l){
+  for(let i=1;i<STOPS.length;i++){
+    if(l<=STOPS[i][0]){const[a,ca]=STOPS[i-1],[b,cb]=STOPS[i],t=(l-a)/(b-a);
+      const c=ca.map((v,j)=>Math.round(v+(cb[j]-v)*t));return '#'+c.map(v=>v.toString(16).padStart(2,'0')).join('');}
+  }return '#643e20';
+}
+let raf=null,t0=0,level=0;
+const DUR=4200;
+$('#startbake').onclick=()=>{
+  $('#startbake').style.display='none';$('#takeout').style.display='';$('#win').classList.add('hot');
+  say('s3','두근두근… 지금 굽는 중! 👀');
+  t0=performance.now();
+  const tick=now=>{
+    level=Math.min(100,(now-t0)/DUR*100);
+    $('#needle').style.left=level+'%';
+    const col=bakeColor(level);
+    $('#ovenck').innerHTML=cookieSVG({shape:st.shape,color:col,choco:st.ings.has('choco')});
+    if(level>=100){finishBake();return;}
+    raf=requestAnimationFrame(tick);
+  };
+  raf=requestAnimationFrame(tick);
+};
+function finishBake(){
+  cancelAnimationFrame(raf);
+  $('#win').classList.remove('hot');
+  st.level=level;st.color=bakeColor(level);
+  $('#takeout').style.display='none';$('#next3').style.display='';
+  if(level<50)say('s3','앗 조금 덜 익었나? 그래도 말랑말랑해서 좋아! 😆');
+  else if(level<=78){say('s3','와 완전 노릇노릇해! 너 베이킹 천재다 💛');const r=$('#win').getBoundingClientRect();for(let i=0;i<6;i++)setTimeout(()=>sparkle(r.left+Math.random()*r.width,r.top+Math.random()*r.height,'✨'),i*90);}
+  else say('s3','헉 살짝 탔다ㅋㅋ 괜찮아 그래도 내가 다 먹을게!');
+}
+$('#takeout').onclick=finishBake;
+$('#next3').onclick=()=>{show('s4');say('s4','이제 예쁘게 꾸며줘! 토핑 고르고 쿠키를 톡톡 눌러봐 ✨');renderDecor();};
+
+/* ---------- step4 ---------- */
+const ICING_LIST=[['none','없음','#f3dcae'],['pink','딸기','#ffc2d6'],['white','바닐라','#fffaf3'],['choco','초코','#8a5233'],['sky','소다','#bfe3ff'],['yellow','레몬','#fff0a8']];
+const TOOLS=[
+  {k:'star',n:'별',ch:'★',c:['#ffd23f','#ffb3c9','#9fd8ff']},
+  {k:'sparkle',n:'반짝이',ch:'✦',c:['#ffffff','#ffe27a','#d7b8ff','#a8e6ff']},
+  {k:'heart',n:'하트',ch:'♥',c:['#ff7fa8','#ff4f86','#ffb3c9']},
+  {k:'dot',n:'스프링클',ch:'●',c:['#ff8fb1','#8fd3ff','#ffe066','#9be3b8','#c8a6ff']},
+  {k:'berry',n:'딸기',ch:'🍓',c:['#000']},
+];
+function buildDecorUI(){
+  $('#icings').innerHTML=ICING_LIST.map(([k,n,c])=>`<button class="chip${k==='none'?' sel':''}" data-k="${k}"><span class="dot" style="background:${c}"></span>${n}</button>`).join('');
+  $('#icings').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{
+    $('#icings').querySelectorAll('.chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');st.icing=b.dataset.k;renderDecor();
+  });
+  $('#tools').innerHTML=TOOLS.map((t,i)=>`<button class="chip${i===0?' sel':''}" data-k="${t.k}">${t.ch} ${t.n}</button>`).join('');
+  $('#tools').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{
+    $('#tools').querySelectorAll('.chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');st.tool=b.dataset.k;
+  });
+}
+function cfg(){return {shape:st.shape,color:st.color,icing:st.icing,choco:st.ings.has('choco'),spr:st.spr.slice()};}
+function renderDecor(){
+  $('#decor').innerHTML=cookieSVG(cfg());
+  const svg=$('#decor svg');
+  svg.addEventListener('pointerdown',e=>{
+    const r=svg.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width*200,y=(e.clientY-r.top)/r.height*200;
+    const t=TOOLS.find(t=>t.k===st.tool);
+    st.spr.push({x:+x.toFixed(1),y:+y.toFixed(1),ch:t.ch,c:t.c[Math.floor(Math.random()*t.c.length)],
+      sz:t.k==='dot'?10:t.k==='berry'?22:t.k==='sparkle'?18:20,r:Math.round(Math.random()*40-20)});
+    if(st.spr.length===1)say('s4','오 예쁘다! 더 올려도 돼 😍');
+    if(st.spr.length===12)say('s4','완전 화려해졌다ㅋㅋ 최고야!');
+    renderDecor();
+  });
+}
+$('#undo').onclick=()=>{st.spr.pop();renderDecor();};
+$('#next4').onclick=()=>{
+  show('s5');
+  const perfect=st.level>=50&&st.level<=78;
+  const deco=(st.icing!=='none'?1:0)+(st.spr.length>=5?1:0);
+  const score=Math.min(5,(perfect?3:2)+deco);
+  $('#stars').textContent='★'.repeat(score)+'☆'.repeat(5-score);
+  $('#finalck').innerHTML=cookieSVG(cfg());
+  say('s5',score>=5?'이건 진짜 우리 가게 대표 메뉴다! 고마워 ♡':score>=4?'너무 맛있겠다! 도와줘서 고마워 ♡':'정성 가득한 쿠키다! 고마워 ♡ 우리 가게에 진열하자!');
+  const r=$('#finalck').getBoundingClientRect();
+  for(let i=0;i<8;i++)setTimeout(()=>sparkle(r.left+Math.random()*r.width,r.top+Math.random()*r.height,['✨','♡','⭐'][i%3]),i*80);
+};
+
+/* ---------- shop ---------- */
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderShop(){
+  const items=shop.map(it=>`<div class="item"><div class="ck">${cookieSVG(it)}</div><div class="tag">${esc(it.name)}</div></div>`);
+  let html='';
+  for(let i=0;i<Math.max(3,Math.ceil(items.length/3)*3);i+=3){
+    html+=items.slice(i,i+3).join('')+'<div class="shelfbar"></div>';
+  }
+  $('#shelf').innerHTML=html;
+}
+$('#toshop').onclick=()=>{
+  const name=($('#cname').value||'앤톤 쿠키').trim()||'앤톤 쿠키';
+  shop.push(Object.assign(cfg(),{name}));
+  show('s6');renderShop();
+  say('s6',shop.length===1?`'${name}' 진열 완료! 첫 손님 기다리는 중 🏪`:`벌써 쿠키가 ${shop.length}개야! 우리 가게 대박 나겠다 🎉`);
+};
+$('#again').onclick=()=>{
+  reset();buildIngs();
+  $('#dough').setAttribute('rx',0);$('#dough').setAttribute('ry',0);$('#dough').setAttribute('fill','#f6e3b8');
+  $('#stirbar').style.width='0';$('#next1').disabled=true;$('#next2').disabled=true;$('#prev2').innerHTML='';$('#cname').value='앤톤 쿠키';
+  buildShapes();buildDecorUI();
+  show('s1');say('s1','또 만들어줄 거야? 좋아! 재료부터 넣자 🧈');
+};
+
+buildIngs();buildShapes();buildDecorUI();paintAvatars();
+
+/* 같은 폴더에 있는 사진 자동으로 불러오기 */
+const CANDIDATES=['anton.jpg','anton.jpeg','anton.png','image.jpg','image.jpeg','image.png','image.JPG','image.JPEG','IMG_2020.png','IMG_2020.jpeg','IMG_2020.jpg','IMG_2020.JPEG','IMG_2020.JPG'];
+(function tryLoad(i){
+  if(i>=CANDIDATES.length)return;
+  const img=new Image();
+  img.onload=()=>{
+    photo=CANDIDATES[i];
+    $('#ph').innerHTML=`<img src="${photo}" alt="">`;
+    paintAvatars();
+    document.querySelector('label[for=file]').style.display='none';
+    document.querySelector('#s0 .note').style.display='none';
+  };
+  img.onerror=()=>tryLoad(i+1);
+  img.src=CANDIDATES[i];
+})(0);
+})();
+</script>
+</body>
+</html>
